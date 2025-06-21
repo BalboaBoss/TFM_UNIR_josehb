@@ -1,8 +1,14 @@
 import tensorflow as tf
-from transformers import AutoTokenizer
 import joblib
-from app.config import MODEL_PATH
+from transformers import AutoTokenizer
+from app.config import MODEL_PATH,TOKENIZER_PATH,LABEL_ENCODER_PATH
+from keras.models import load_model
 
-modelo = tf.keras.models.load_model(MODEL_PATH)  # ✅ FUNCIONA CON .save()
-tokenizer = AutoTokenizer.from_pretrained(f"{MODEL_PATH}/tokenizer")
-label_encoder = joblib.load(f"{MODEL_PATH}/label_encoder.pkl")
+
+# Cargar modelo entrenado (espera input_ids y attention_mask)
+modelo = load_model(MODEL_PATH, compile=False) 
+# Cargar tokenizer HuggingFace
+tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH)
+
+# Cargar label encoder
+label_encoder = joblib.load(LABEL_ENCODER_PATH)

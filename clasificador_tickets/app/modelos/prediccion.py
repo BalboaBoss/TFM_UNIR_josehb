@@ -1,13 +1,22 @@
-from app.modelos.loader import model, tokenizer
-from app.services.preprocesamiento import prepro_text
-import torch
-import torch.nn.functional as F
+from app.modelos.loader import modelo, tokenizer, label_encoder
+import tensorflow as tf
+import numpy as np
 
-def predict_categoria(text: str):
-    cleaned_text = prepro_text(text)
-    inputs = tokenizer(cleaned_text, return_tensors="pt", truncation=True, padding=True)
-    outputs = model(**inputs)
-    probs = F.softmax(outputs.logits, dim=1)
-    prediction = torch.argmax(probs, dim=1).item()
-    confidence = torch.max(probs).item()
-    return prediction, confidence
+def predict_categoria(texto: str) -> str:
+    inputs = tokenizer(texto, return_tensors="tf", padding=True, truncation=True, max_length=512)
+
+    # Pasar como lista en el orden esperado por el modelo
+    input_ids = inputs["input_ids"]
+    attention_mask = inputs["attention_mask"]
+
+
+    outputs = modelo([input_ids, attention_mask])
+
+
+    probs = tf.nn.softmax(outputs, axis=-1).numpy()
+
+    predicted_index = np.argmax(probs, axis=1)[0]
+    predicted_label = label_encoder.inverse_transform([predicted_index])[0]
+
+    return predicted_label
+

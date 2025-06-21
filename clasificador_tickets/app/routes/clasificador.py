@@ -1,10 +1,13 @@
 from fastapi import APIRouter
-from app.schemas.ticket import TicketRequest, TicketResponse
+from pydantic import BaseModel
 from app.modelos.prediccion import predict_categoria
 
 router = APIRouter()
 
-@router.post("/clasifica", response_model=TicketResponse)
-def classify_ticket(ticket: TicketRequest):
-    category_id, confidence = predict_categoria(ticket.subject + " " + ticket.body)
-    return TicketResponse(category=category_id, confidence=confidence)
+class Ticket(BaseModel):
+    texto: str
+
+@router.post("/clasificar")
+def clasificar_ticket(ticket: Ticket):
+    prediccion = predict_categoria(ticket.texto)
+    return {"categoria": prediccion}
