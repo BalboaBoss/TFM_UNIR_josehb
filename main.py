@@ -6,7 +6,6 @@ import tensorflow as tf
 
 app = FastAPI()
 
-
 # Modelo de entrada para la API
 class TextInput(BaseModel):
     subject: str
