@@ -1,1 +1,0 @@
-# Este archivo permite que la carpeta schemas sea tratada como un paquete de Python.
