@@ -3,6 +3,7 @@ from prediccion import model, tokenizer, label_encoder
 from pydantic import BaseModel
 from fastapi import HTTPException
 import tensorflow as tf
+import time
 
 app = FastAPI()
 
@@ -25,7 +26,7 @@ def predict(input: TextInput):
             return_tensors="tf"
         )
 
-        # 🟢 CAMBIO CLAVE: usar nombres reales de los tensores
+        # CAMBIO CLAVE: usar nombres reales de los tensores
         inputs = {
             "inputs": tokens["input_ids"],
             "inputs_1": tokens["attention_mask"]
@@ -34,7 +35,8 @@ def predict(input: TextInput):
         predictions = model.signatures["serving_default"](**inputs)["output_0"]
         predicted_index = tf.argmax(predictions, axis=1).numpy()[0]
         predicted_label = label_encoder.inverse_transform([predicted_index])[0]
-
+        duration = time.time() - start
+        print(f"Tiempo de predicción: {duration:.4f} segundos")
         return {"label": predicted_label}
 
     except Exception as e:

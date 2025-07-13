@@ -72,7 +72,7 @@ model.fit(
 def serving_fn(inputs):
     return model(inputs)
 
-export_path = "modelos2/modelo_final"
+export_path = "modelos3/modelo_final"
 model.save(export_path, include_optimizer=False, signatures={"serving_default": serving_fn})
 tokenizer.save_pretrained(f"{export_path}/tokenizer")
 joblib.dump(label_encoder, f"{export_path}/label_encoder.pkl")

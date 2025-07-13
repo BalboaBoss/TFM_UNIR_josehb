@@ -8,7 +8,7 @@ from transformers import BertTokenizerFast
 app = FastAPI()
 
 # Rutas
-MODEL_PATH = "modelos2/modelo_final"
+MODEL_PATH = "modelos3/modelo_final"
 TOKENIZER_PATH = f"{MODEL_PATH}/tokenizer"
 LABEL_ENCODER_PATH = f"{MODEL_PATH}/label_encoder.pkl"
 
